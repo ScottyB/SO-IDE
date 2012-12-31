@@ -36,8 +36,17 @@ hr {
 }
 
 h1 {
-  margin: 0px auto;
-  margin: 2px;
+  font-size: 40px;
+  margin: 20px auto 0px auto;
+  color: #00b2ee;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+  text-align: center;
+}
+
+p {
+  margin: 5px auto;
+  color: #c4c4c4;
+  font-family: sans-serif;
   text-align: center;
 }
 
@@ -92,7 +101,7 @@ pre {
 
 .button {
   padding: 5px;
-  width: 100px;
+  width: 150px;
   border: 1px solid grey;
   color: white;
   background: #9cf;
