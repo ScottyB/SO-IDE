@@ -12,11 +12,6 @@ body {
   width: 700px;
 }
 
-.sidebar{
-  display: inline-block;
-  width: 110px;
-}
-
 .query-width{
 width: 474px;
 }
@@ -90,7 +85,6 @@ pre {
 }
 
 .CodeMirror {
-  display: inline-block;
   border: 2px inset #DEe;
   margin: 5px;
   width: 50%;
@@ -203,5 +197,3 @@ pre {
   }
 
 }
-
-
