@@ -13,34 +13,44 @@ soide.Setup = function() {
     lineNumbers: true,
     matchBrackets: true,
     mode: "text/x-java"
-  });
+  }),
 
-  var query = soide.QueryCaller(), parser = soide.ResultParser(query, "#popup", "#back_fader", myCodeMirror);
+      query = soide.QueryCaller(), parser = soide.ResultParser(query, "#popup", "#back_fader", myCodeMirror),
 
-  var onSend = function() {
-    var questionString = jQuery("#query").val();
-    if (questionString) {
-      query.sendQuery(parser.parseResult, questionString);
-    }
-    else {
-      jQuery("#query").attr("placeholder","Please enter query first");
-    }
-    return false;
-  };
+      downloadFile = function() {
+        myCodeMirror.save();
+        query.fetchDownloadURL(function(data){
+          window.location.href='/static/files.zip';
+          console.log("Completed");});
+        return false;
+      },
+
+      onSend = function() {
+        var questionString = jQuery("#query").val();
+        if (questionString) {
+          query.sendQuery(parser.parseResult, questionString);
+        }
+        else {
+          jQuery("#query").attr("placeholder","Please enter query first");
+        }
+        return false;
+      };
 
   myCodeMirror.setSize(650, 600);
 
   jQuery("#queryForm").submit(onSend);
-  jQuery("#send").click(onSend);
   jQuery("#squaresWaveG").hide();
   jQuery("#back_fader").scroll(parser.loadNext);
+  jQuery("#download").click(downloadFile);
 };
 
 soide.QueryCaller = function(){
   "use strict";
-  var service = "https://api.stackexchange.com/2.1/",
+  var soAPIServer = "https://api.stackexchange.com/2.1/",
 
-      proxy = "http://localhost:8888/fetch",
+      server = "http://localhost:8888/",
+
+      urls = {FETCH : server + "fetch", DOWNLOAD : server + "download"},
 
       errorCallback = function(data) {
         console.log(JSON.stringify(data));
@@ -49,8 +59,8 @@ soide.QueryCaller = function(){
       request = function(requestType, dataCallback, urlAddress, data) {
 
         console.log("Data: " + JSON.stringify(data));
-        console.log(service + urlAddress);
-        jQuery.ajax({url : service + urlAddress,
+        console.log(soAPIServer + urlAddress);
+        jQuery.ajax({url : soAPIServer + urlAddress,
                      type : requestType,
                      dataType : "json",
                      data : data,
@@ -60,7 +70,7 @@ soide.QueryCaller = function(){
                    );
       },
 
-      handlers = [],
+      soHtmlHandlers = [],
 
       that = {
 
@@ -73,22 +83,34 @@ soide.QueryCaller = function(){
                         "site" : "stackoverflow",
                         "answers" : 1,
                         "tagged" : "java",
-                        q : query};
+                        "q" : query};
           request("GET", callback, serviceSuffix, params);
         },
 
-        fetchHtml: function(urlToFetch, handleProxy) {
-          var result = jQuery.ajax({url: proxy,
+        fetchHtml: function(urlToFetch, callback) {
+          var result = jQuery.ajax({url: urls.FETCH,
                                     data: {url : urlToFetch},
-                                    success: handleProxy,
+                                    type: "post",
+                                    success: callback,
                                     error: errorCallback
                                    });
-          handlers.push(result);
+          soHtmlHandlers.push(result);
+        },
+
+        fetchDownloadURL: function(callback) {
+          var data = {"code" : jQuery("#code").val()};
+          var result = jQuery.ajax({url: urls.DOWNLOAD,
+                                    data: data,
+                                    type: "post",
+                                    success: callback,
+                                    error: errorCallback
+                                   });
+
         },
 
         abortAllFetches : function() {
-          for(var i = 0; i < handlers.length; i++) {
-            handlers[i].abort();
+          for(var i = 0; i < soHtmlHandlers.length; i++) {
+            soHtmlHandlers[i].abort();
           }
         },
 

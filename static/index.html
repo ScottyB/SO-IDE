@@ -10,8 +10,8 @@
       <h1>Stack Overflow Development by Query</h1>
       <form id="queryForm" method="get" action="">
         <div class="pair">
-          <input id="query" class="query-width" type="text" name="query" placeholder="How do I ...?" />
-          <input id="send" class="submit-width" type="button" name="search" value="Search" />
+          <input id="query" class="fontMargin query-width" type="text" name="query" placeholder="How do I ...?" />
+          <input id="send" class="button fontMargin submit-width" type="submit" name="search" value="Search" />
           <div id="squaresWaveG">
             <div id="squaresWaveG_1" class="squaresWaveG">
             </div>
@@ -31,13 +31,20 @@
             </div>
           </div>
         </div>
+      </form>
+      <form id="downloadForm" method="post" action="">
+        <div class="sidebar">
+          <input id="download" type="submit" class="fontMargin button" value="Download" />
+        </div>
         <textarea id="code" name="code"></textarea>
       </form>
     </div>
+
     <div id="back_fader">
       <div class="popup_content" id="popup">
       </div>
     </div>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script src="static/codemirror-3.0/lib/codemirror.js"></script>
     <script src="static/codemirror-3.0/mode/clike/clike.js"></script>

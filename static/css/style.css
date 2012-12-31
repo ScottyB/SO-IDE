@@ -12,6 +12,11 @@ body {
   width: 700px;
 }
 
+.sidebar{
+  display: inline-block;
+  width: 110px;
+}
+
 .query-width{
 width: 474px;
 }
@@ -24,7 +29,7 @@ hr {
   width: 150px;
 }
 
-input {
+.fontMargin {
   font-size: 18px;
   padding: 5px;
   margin: 5px;
@@ -91,11 +96,12 @@ pre {
   width: 50%;
 }
 
-#send {
+.button {
+  padding: 5px;
+  width: 100px;
   border: 1px solid grey;
   color: white;
   background: #9cf;
-  padding: 5px;
 }
 
 #button:active {
