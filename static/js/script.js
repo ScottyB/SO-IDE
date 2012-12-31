@@ -21,7 +21,7 @@ soide.Setup = function() {
         myCodeMirror.save();
         query.fetchDownloadURL(function(data){
           window.location.href='/static/files.zip';
-          console.log("Completed");});
+          console.log("Completed");}, jQuery("#code").val());
         return false;
       },
 
@@ -50,7 +50,10 @@ soide.QueryCaller = function(){
 
       server = "http://localhost:8888/",
 
-      urls = {FETCH : server + "fetch", DOWNLOAD : server + "download"},
+      urls = {
+        FETCH : server + "fetch",
+        DOWNLOAD : server + "download"
+      },
 
       errorCallback = function(data) {
         console.log(JSON.stringify(data));
@@ -66,8 +69,16 @@ soide.QueryCaller = function(){
                      data : data,
                      success : dataCallback,
                      error : errorCallback
-                    }
-                   );
+                    });
+      },
+
+      requestPOST = function(url, data, callback) {
+        return jQuery.ajax({url: url,
+                            data: data,
+                            type: "post",
+                            success: callback,
+                            error: errorCallback
+                           });
       },
 
       soHtmlHandlers = [],
@@ -88,24 +99,12 @@ soide.QueryCaller = function(){
         },
 
         fetchHtml: function(urlToFetch, callback) {
-          var result = jQuery.ajax({url: urls.FETCH,
-                                    data: {url : urlToFetch},
-                                    type: "post",
-                                    success: callback,
-                                    error: errorCallback
-                                   });
+          var result = requestPOST(urls.FETCH, {"url" : urlToFetch}, callback);
           soHtmlHandlers.push(result);
         },
 
-        fetchDownloadURL: function(callback) {
-          var data = {"code" : jQuery("#code").val()};
-          var result = jQuery.ajax({url: urls.DOWNLOAD,
-                                    data: data,
-                                    type: "post",
-                                    success: callback,
-                                    error: errorCallback
-                                   });
-
+        fetchDownloadURL: function(callback, codeData) {
+          var result = requestPOST(urls.DOWNLOAD, {"code" : codeData}, callback);
         },
 
         abortAllFetches : function() {
